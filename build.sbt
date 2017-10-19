@@ -1,4 +1,4 @@
-name := "jr-api-tutorial-test"
+name := "jr-test-workshop"
 
 organization := "com.gu"
 
