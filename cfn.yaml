@@ -59,7 +59,7 @@ Resources:
                 - execute-api:Invoke
               Resource: "*"
 
-  Lambda:
+  WorkshopLambda:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub ${App}-${Stage}
@@ -79,6 +79,16 @@ Resources:
       Role: !GetAtt ExecutionRole.Arn
       Runtime: java8
       Timeout: 300
+
+
+  WorkshopLambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Sub ${App}-${Stage}
+      Principal: apigateway.amazonaws.com
+    DependsOn: WorkshopLambda
+
 
   WorkshopApi:
     Type: AWS::ApiGateway::RestApi
@@ -105,10 +115,10 @@ Resources:
       Integration:
         Type: AWS_PROXY
         IntegrationHttpMethod: POST
-        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Lambda.Arn}/invocations
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${WorkshopLambda.Arn}/invocations
     DependsOn:
     - WorkshopApi
-    - Lambda
+    - WorkshopLambda
     - WorkshopApiResource
 
   WorkshopApiDeployment:
