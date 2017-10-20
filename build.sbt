@@ -21,12 +21,10 @@ libraryDependencies ++= Seq(
   "com.amazonaws" % "aws-lambda-java-core" % "1.1.0"
 )
 
-enablePlugins(JavaAppPackaging, RiffRaffArtifact)
+enablePlugins(RiffRaffArtifact)
 
-topLevelDirectory in Universal := None
-packageName in Universal := normalizedName.value
-
-riffRaffPackageType := (packageBin in Universal).value
+assemblyJarName := s"${name.value}.jar"
+riffRaffPackageType := assembly.value
 riffRaffUploadArtifactBucket := Option("riffraff-artifact")
 riffRaffUploadManifestBucket := Option("riffraff-builds")
 riffRaffArtifactResources += (file("cfn.yaml"), s"${name.value}-cfn/cfn.yaml")
