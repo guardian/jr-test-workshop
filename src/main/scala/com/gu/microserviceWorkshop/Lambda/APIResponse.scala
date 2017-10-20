@@ -21,5 +21,4 @@ object APIResponse {
       APIResponse(200,  Map("Content-Type" -> "application/json"), body)
   }
 
-
 }
