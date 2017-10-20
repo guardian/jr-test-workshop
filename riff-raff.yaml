@@ -11,7 +11,19 @@ templates:
       fileName:  jr-test-workshop.zip
       prefixStack: false
 
-  deployments:
-    jr-test-workshop-upload:
-      template: jr-test-workshop
-      actions: [uploadLambda]
+deployments:
+  jr-test-workshop-upload:
+    template: jr-test-workshop
+    actions: [uploadLambda]
+  jr-test-workshop-cfn:
+    type: cloud-formation
+    app: jr-test-workshop
+    parameters:
+      prependStackToCloudFormationStackName: false
+      cloudFormationStackName: jr-test-workshop
+      templatePath: cfn.yaml
+    dependencies: [jr-test-workshop-upload]
+  jr-test-workshop-lambda-update:
+    template: jr-test-workshop
+    actions: [updateLambda]
+    dependencies: [jr-test-workshop-cfn]
