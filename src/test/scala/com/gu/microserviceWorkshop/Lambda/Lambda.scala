@@ -1,18 +1,16 @@
-package com.gu.microserviceWorkshop
+package com.gu.microserviceWorkshop.LambdaTest
+
 import io.circe.syntax._
 import java.nio.charset.StandardCharsets.UTF_8
-
 import java.io.{InputStream, OutputStream}
 
-object Lambda {
+import com.gu.microserviceWorkshop.{APIResponse, IsPrimeResult}
 
-  def handler(in: InputStream, out: OutputStream): Unit = {
+object Lambda extends App {
 
     val response = APIResponse(200,  Map("Content-Type" -> "application/json"), IsPrimeResult(49, isPrime = true).asJson.noSpaces)
 
     //no spaces converts json to a string
-    out.write(response.asJson.noSpaces.getBytes(UTF_8))
-
-  }
+     print(response.asJson.noSpaces)
 
 }
