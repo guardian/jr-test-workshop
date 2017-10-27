@@ -108,6 +108,7 @@ Resources:
   WorkshopApiMethod:
     Type: AWS::ApiGateway::Method
     Properties:
+      ApiKeyRequired: true
       AuthorizationType: NONE
       RestApiId: !Ref WorkshopApi
       ResourceId: !Ref WorkshopApiResource
@@ -146,3 +147,43 @@ Resources:
      DependsOn:
      - WorkshopApi
      - WorkshopApiDeployment
+
+
+  WorkshopApiUsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      ApiStages:
+      - ApiId: !Ref WorkshopApi
+        Stage: !Ref WorkshopApiStageProd
+      Description: Workshop Api Default Usage Plan
+      UsagePlanName: WorkshopApiDefaultUsagePlan
+    DependsOn:
+      - WorkshopApi
+      - WorkshopApiStageProd
+
+  WorkshopApiKey:
+    Type: AWS::ApiGateway::ApiKey
+    DependsOn:
+    - WorkshopApiDeployment
+    - WorkshopApiStageProd
+    Properties:
+      Name: TestKey
+      Description: CloudFormation API Key V1
+      Enabled: true
+      StageKeys:
+        - RestApiId: !Ref WorkshopApi
+          StageName: !Ref Stage
+    DependsOn:
+      - WorkshopApiUsagePlan
+
+
+  WorkshopApiUsagePlanKey:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties:
+      KeyId: !Ref WorkshopApiKey
+      KeyType: API_KEY
+      UsagePlanId: !Ref WorkshopApiUsagePlan
+    DependsOn:
+      - WorkshopApiUsagePlan
+      - WorkshopApiKey
+
