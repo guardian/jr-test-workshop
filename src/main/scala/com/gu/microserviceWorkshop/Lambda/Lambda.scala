@@ -11,12 +11,22 @@ import cats.syntax.either._
 
 case class APIRequest(body: String)
 object APIRequest {
-  implicit val stringAPIResponseDecoder: Decoder[APIResponse] = deriveDecoder
+  implicit val stringAPIResponseDecoder: Decoder[APIRequest] = deriveDecoder
 }
 
 case class APIBody(number: String)
 object APIBody {
   implicit val stringAPIBodyDecoder: Decoder[APIBody] = deriveDecoder
+}
+
+case class APIResponse(statusCode: Int, headers: Map[String, String], body: String)
+object APIResponse {
+  implicit val stringAPIResponseEncoder : Encoder[APIResponse] = deriveEncoder
+}
+
+case class IsPrimeResult(number: String, isPrime: Boolean)
+object IsPrimeResult {
+  implicit val isPrimeEncoder: Encoder[IsPrimeResult] = deriveEncoder
 }
 
 
@@ -28,10 +38,10 @@ object Lambda {
 
   def handler(in: InputStream, out: OutputStream): Unit = {
     val jsonPayload = scala.io.Source.fromInputStream(in).mkString("")
-
+    print (jsonPayload)
     val number = for{
-      request <- decode[APIRequest](jsonPayload)
-      body<- decode[APIBody](request.body)
+      request <- decode[APIRequest](jsonPayload).leftMap(e => print("problem 1"))
+      body<- decode[APIBody](request.body).leftMap(e => print("problem 2"))
     } yield body.number
 
 
