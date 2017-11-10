@@ -12,7 +12,7 @@ object APIResponse {
   implicit val stringAPIResponseEncoder : Encoder[APIResponse] = deriveEncoder
 }
 
-case class IsPrimeResult(number: Double, isPrime: Boolean)
+case class IsPrimeResult(number: String, isPrime: Boolean)
 object IsPrimeResult {
   implicit val isPrimeEncoder: Encoder[IsPrimeResult] = deriveEncoder
 }
