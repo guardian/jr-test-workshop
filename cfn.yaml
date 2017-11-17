@@ -108,7 +108,7 @@ Resources:
   WorkshopApiMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      ApiKeyRequired: true
+      ApiKeyRequired: false
       AuthorizationType: NONE
       RestApiId: !Ref WorkshopApi
       ResourceId: !Ref WorkshopApiResource
